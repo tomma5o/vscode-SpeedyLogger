@@ -20,24 +20,16 @@
         "commands": [
             {
                 "command": "extension.insertLogStatement",
-                "title": "Insert Log Statement"
-            },
-            {
-                "command": "extension.deleteAllLogStatements",
-                "title": "Delete all console.log statements"
+                "title": "Insert Log Statement",
+                "args": "ciccio"
             }
         ],
         "keybindings": [
             {
                 "command": "extension.insertLogStatement",
                 "key": "shift+ctrl+l",
-                "mac": "shift+cmd+l",
-                "when": "editorTextFocus"
-            },
-            {
-                "command": "extension.deleteAllLogStatements",
-                "key": "shift+ctrl+d",
-                "mac": "shift+cmd+d"
+                "mac": "shift+cmd+l"
+                
             }
         ]
     },
