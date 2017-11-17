@@ -1,21 +1,21 @@
 {
     "name": "vscode-js-console-utils",
     "displayName": "javascript console utils",
-    "description": "Help insert and remove console.(*) statements",
-    "version": "0.7.0",
-    "publisher": "whtouche",
-    "repository": "https://github.com/whtouche/vscode-js-console-utils",
+    "description": "Help insert and remove console log statements",
+    "version": "1.0.0",
+    "publisher": "tomma5o",
+    "repository": "https://github.com/tomma5o/vscode-speedyLogger",
     "engines": {
         "vscode": "^1.5.0"
     },
     "categories": [
-        "Other"
+        "Debuggers"
     ],
     "activationEvents": [
         "onCommand:extension.insertLogStatement",
         "onCommand:extension.deleteAllLogStatements"
     ],
-    "main": "./extension",
+    "main": "./out/src/extension",
     "contributes": {
         "commands": [
             {
@@ -34,6 +34,8 @@
         ]
     },
     "scripts": {
+        "vscode:prepublish": "tsc -p ./",
+        "compile": "tsc -watch -p ./",
         "postinstall": "node ./node_modules/vscode/bin/install",
         "test": "node ./node_modules/vscode/bin/test"
     },
