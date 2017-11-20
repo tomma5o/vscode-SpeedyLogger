@@ -1,6 +1,6 @@
 {
-    "name": "vscode-js-console-utils",
-    "displayName": "javascript console utils",
+    "name": "vscode-speedylogger",
+    "displayName": "Speedy Logger",
     "description": "Help insert and remove console log statements",
     "version": "1.0.0",
     "publisher": "tomma5o",
@@ -20,8 +20,11 @@
         "commands": [
             {
                 "command": "extension.insertLogStatement",
-                "title": "Insert Log Statement",
-                "args": "ciccio"
+                "title": "Insert Log Statement"
+            },
+            {
+                "command": "extension.deleteAllLogStatements",
+                "title": "Insert Log Statement"
             }
         ],
         "keybindings": [
@@ -29,7 +32,11 @@
                 "command": "extension.insertLogStatement",
                 "key": "shift+ctrl+l",
                 "mac": "shift+cmd+l"
-                
+            },
+            {
+                "command": "extension.deleteAllLogStatements",
+                "key": "shift+ctrl+d",
+                "mac": "shift+cmd+d"
             }
         ]
     },
@@ -40,11 +47,13 @@
         "test": "node ./node_modules/vscode/bin/test"
     },
     "devDependencies": {
-        "typescript": "^2.0.3",
-        "vscode": "^1.0.0",
-        "mocha": "^2.3.3",
-        "eslint": "^3.6.0",
+        "@types/mocha": "^2.2.32",
         "@types/node": "^6.0.40",
-        "@types/mocha": "^2.2.32"
-    }
+        "eslint": "^3.6.0",
+        "esprima": "^4.0.0",
+        "mocha": "^2.3.3",
+        "typescript": "^2.0.3",
+        "vscode": "^1.0.0"
+    },
+    "dependencies": {}
 }
