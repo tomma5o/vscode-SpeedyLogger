@@ -24,7 +24,7 @@
             },
             {
                 "command": "extension.deleteAllLogStatements",
-                "title": "Insert Log Statement"
+                "title": "Delete Log Statement"
             }
         ],
         "keybindings": [
