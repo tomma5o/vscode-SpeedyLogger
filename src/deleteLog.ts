@@ -1,6 +1,6 @@
 import { window, commands, Range, Position, Disposable, ExtensionContext, TextDocument, WorkspaceEdit, workspace, TextEditor } from 'vscode';
 
-class DeleteLog {
+export default class DeleteLog {
     
     editor = window.activeTextEditor;
 
@@ -46,5 +46,3 @@ class DeleteLog {
         });
     };
 };
-
-export default DeleteLog
