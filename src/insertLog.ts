@@ -5,45 +5,24 @@ export default class insertLog {
     
         editor = window.activeTextEditor;
         activeLine = this.editor.selection.active;
-    
-        private insertText(val) {
-            if (!this.editor) {
-                window.showErrorMessage('Can\'t insert log because no document is open');
-                return;
-            }
         
-            const selection = this.editor.selection;
-            const range = new Range(selection.start, selection.end);
-        
-            this.editor.edit((editBuilder) => {
-                editBuilder.replace(range, val);
-            });
-        };
-    
         private insertLog(nodeName:string) {
-            commands.executeCommand('editor.action.insertLineAfter').then((e) => {
-                const logToInsert = `console.log(/*SL*/'${nodeName}: ', ${nodeName});`;
-                this.insertText(logToInsert);
+            commands.executeCommand('editor.action.insertLineAfter').then(()=> {
+
+                const logText = `console.log(/*SL*/ ${nodeName});\n`;
+                const selection = this.editor.selection;
+                const range = new Position(selection.active.line, 0);
+
+                this.editor.edit((editBuilder) => {
+                    console.log(range.line, logText)
+                    editBuilder.insert(range, logText);
+                })
             })
         }
-    
-        /**
-         * @todo
-         * function for check if in the upper?under line 
-         * there are a variable
-         */
-        private searchDeclarator(script) {
-            if (script.body.length === 0 || script.body[0].type !== "VariableDeclaration") {
-                    let lineTest = new Position(this.activeLine.line - 1, this.activeLine.character);
-                    let checkNearLine = this.editor.document.lineAt(lineTest);
-    
-                    if (checkNearLine && checkNearLine.text !== "") {
-                        let getAst = parseScript(checkNearLine.text);
-    
-                        if (getAst.body)
-                            return getAst.body[0].declarations[0].id.name;
-                }
-            }
+
+        private isInsideBrackets(lineText:string) {
+            const removeWhitespace = lineText.trim();
+            return lineText.match(/{$/g) ? true : false
         }
     
         public insertLogStatement(context) {
@@ -52,44 +31,34 @@ export default class insertLog {
                 
                 this.activeLine = this.editor.selection.active;
                 let lineText = this.editor.document.lineAt(this.activeLine).text;
+                const text = parseScript(this.isInsideBrackets(lineText) ? lineText + "}" : lineText);
+    
+                switch ( text.body.length && text.body[0].type ) {
 
-                if (lineText[lineText.length -1] === "{") {
-                    lineText =lineText + "}"
-                }
-                const text = parseScript(lineText);
-    
-                console.log("text: ", text)
-                console.log("line length: ", lineText.length)
-                console.log("current line: ", this.activeLine.line + 1)
-    
-                if (text.body.length) {
-                    switch ( text.body[0].type ) {
-    
-                        case "VariableDeclaration":
-                            let varName = text.body[0].declarations[0].id.name;
+                    case "VariableDeclaration":
+                        let varName = text.body[0].declarations[0].id.name;
 
-                            if (text.body[0].declarations[0].init.type !== "ArrowFunctionExpression") {
-                                this.insertLog(varName);
-                            } else {
-                                let identifiers = text.body[0].declarations[0].init.params.map(e => e.name);
-                                identifiers.forEach(el => {
-                                    this.insertLog(el);
-                                });
-                            }
-                            break;
-    
-                        case "FunctionDeclaration":
-                            let identifiers = text.body[0].params.map(e => e.name);
+                        if (text.body[0].declarations[0].init.type !== "ArrowFunctionExpression") {
+                            this.insertLog(`${varName}: ` + varName);
+                        } else {
+                            let identifiers = text.body[0].declarations[0].init.params.map(e => e.name);
                             identifiers.forEach(el => {
-                                this.insertLog(el);
+                                this.insertLog(`${el}: ` + el);
                             });
-                            console.log(identifiers)
-                            break;
-    
-                        default:
-                            this.insertText('console.log();');
-                            break;
-                    }
+                        }
+                        break;
+
+                    case "FunctionDeclaration":
+                        let identifiers = text.body[0].params.map(e => e.name);
+                        const args = identifiers.map(el => {
+                            return `'${el}: ', ` + el
+                        });
+                        this.insertLog(args.join(","))
+
+                        break;
+
+                    default:
+                        break;
                 }
             });
         };
