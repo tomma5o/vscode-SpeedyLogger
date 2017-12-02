@@ -39,11 +39,11 @@ export default class insertLog {
                         let varName = text.body[0].declarations[0].id.name;
 
                         if (text.body[0].declarations[0].init.type !== "ArrowFunctionExpression") {
-                            this.insertLog(`${varName}: ` + varName);
+                            this.insertLog(`'${varName}: ', ` + varName);
                         } else {
                             let identifiers = text.body[0].declarations[0].init.params.map(e => e.name);
                             identifiers.forEach(el => {
-                                this.insertLog(`${el}: ` + el);
+                                this.insertLog(`'${el}: ' ` + el);
                             });
                         }
                         break;
