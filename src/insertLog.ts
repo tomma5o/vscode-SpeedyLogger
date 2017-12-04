@@ -7,15 +7,18 @@ export default class insertLog {
         activeLine = this.editor.selection.active;
         
         private insertLog(nodeName:string) {
-            commands.executeCommand('editor.action.insertLineAfter').then(()=> {
+            return new Promise(res => {
+                commands.executeCommand('editor.action.insertLineAfter').then(()=> {
+                    const logText = `console.log(/*SL*/'${nodeName}:',${nodeName});`;
+                    const selection = this.editor.selection;
+                    console.log(selection);
+                    const range = new Position(selection.active.line, 0);
+    
+                    this.editor.edit((editBuilder) => {
+                        editBuilder.insert(range, logText);
+                    })
 
-                const logText = `console.log(/*SL*/ ${nodeName});\n`;
-                const selection = this.editor.selection;
-                const range = new Position(selection.active.line, 0);
-
-                this.editor.edit((editBuilder) => {
-                    console.log(range.line, logText)
-                    editBuilder.insert(range, logText);
+                    res()
                 })
             })
         }
@@ -26,7 +29,7 @@ export default class insertLog {
         }
     
         public insertLogStatement(context) {
-            commands.registerCommand('extension.insertLogStatement', () => {
+            commands.registerCommand('extension.insertLogStatement', async () => {
                 if (!this.editor) { return; }
                 
                 this.activeLine = this.editor.selection.active;
@@ -39,22 +42,21 @@ export default class insertLog {
                         let varName = text.body[0].declarations[0].id.name;
 
                         if (text.body[0].declarations[0].init.type !== "ArrowFunctionExpression") {
-                            this.insertLog(`'${varName}: ', ` + varName);
+                            this.insertLog(varName);
                         } else {
                             let identifiers = text.body[0].declarations[0].init.params.map(e => e.name);
                             identifiers.forEach(el => {
-                                this.insertLog(`'${el}: ' ` + el);
+                                this.insertLog(el);
                             });
                         }
                         break;
 
                     case "FunctionDeclaration":
                         let identifiers = text.body[0].params.map(e => e.name);
-                        const args = identifiers.map(el => {
-                            return `'${el}: ', ` + el
-                        });
-                        this.insertLog(args.join(","))
 
+                        for (let arg of identifiers) {
+                            await this.insertLog(arg)
+                        }
                         break;
 
                     default:
