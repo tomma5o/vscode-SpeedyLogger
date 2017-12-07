@@ -11,13 +11,10 @@ export default class insertLog {
                 commands.executeCommand('editor.action.insertLineAfter').then(()=> {
                     const logText = `console.log(/*SL*/'${nodeName}:',${nodeName});`;
                     const selection = this.editor.selection;
-                    console.log(selection);
-                    const range = new Position(selection.active.line, 0);
     
                     this.editor.edit((editBuilder) => {
-                        editBuilder.insert(range, logText);
+                        editBuilder.replace(selection, logText);
                     })
-
                     res()
                 })
             })
@@ -31,11 +28,11 @@ export default class insertLog {
         public insertLogStatement(context) {
             commands.registerCommand('extension.insertLogStatement', async () => {
                 if (!this.editor) { return; }
-                
-                this.activeLine = this.editor.selection.active;
-                let lineText = this.editor.document.lineAt(this.activeLine).text;
+                const currentLine = this.editor.selection.active.line;
+
+                let lineText = this.editor.document.lineAt(currentLine).text;
                 const text = parseScript(this.isInsideBrackets(lineText) ? lineText + "}" : lineText);
-    
+
                 switch ( text.body.length && text.body[0].type ) {
 
                     case "VariableDeclaration":
@@ -45,9 +42,9 @@ export default class insertLog {
                             this.insertLog(varName);
                         } else {
                             let identifiers = text.body[0].declarations[0].init.params.map(e => e.name);
-                            identifiers.forEach(el => {
-                                this.insertLog(el);
-                            });
+                            for (let arg of identifiers) {
+                                await this.insertLog(arg)
+                            }
                         }
                         break;
 
@@ -60,7 +57,7 @@ export default class insertLog {
                         break;
 
                     default:
-                        break;
+                        window.showInformationMessage("sorry but this casistic is not supported");
                 }
             });
         };
