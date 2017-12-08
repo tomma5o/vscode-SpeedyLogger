@@ -1,14 +1,14 @@
 import { window } from 'vscode';
 
 import DeleteLog from "./deleteLog";
-import InsertLog from "./insertLog";
+import TypeCheck from "./insertLog";
 
 export function activate(context) {
     if ( window.activeTextEditor.document) {
-        let insertLog = new InsertLog();
+        let typeCheck = new TypeCheck();
         let deleteLog = new DeleteLog();
-
-        context.subscriptions.push(insertLog.insertLogStatement(context));
+        
+        context.subscriptions.push(typeCheck.insertLogStatement(context));
         context.subscriptions.push(deleteLog.deleteAllLogStatements());
     }
 }

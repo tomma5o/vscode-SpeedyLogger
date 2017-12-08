@@ -1,4 +1,4 @@
-import { window, commands, Range, Position, Disposable, ExtensionContext, TextDocument, WorkspaceEdit, workspace, TextEditor } from 'vscode';
+import { window, commands, Range, WorkspaceEdit, workspace } from 'vscode';
 
 export default class DeleteLog {
     
