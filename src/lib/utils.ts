@@ -1,6 +1,6 @@
 import { window, commands } from 'vscode';
 
-export default function insertLog(nodeName:string) {
+export const insertLog = (nodeName:string) => {
     const editor = window.activeTextEditor;
 
     return new Promise(res => {
@@ -14,4 +14,9 @@ export default function insertLog(nodeName:string) {
             res()
         })
     })
+}
+
+export const isInsideBrackets = (lineText:string) => {
+    const removeWhitespace = lineText.trim();
+    return lineText.match(/{$/g) ? true : false
 }

@@ -1,5 +1,5 @@
 import { window, commands, Range, Position, Disposable, ExtensionContext, TextDocument, WorkspaceEdit, workspace, TextEditor } from 'vscode';
-import { isInsideBrackets, insertLog } from "./util"
+import { isInsideBrackets, insertLog } from "../lib/utils"
 import { parseScript } from 'esprima';
 
 
